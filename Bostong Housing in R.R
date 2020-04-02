@@ -9,3 +9,4 @@ data("BostonHousing")
 bdata <- BostonHousing 
 
 View(bdata)
+str(bdata)
