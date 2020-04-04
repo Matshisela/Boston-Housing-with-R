@@ -1,3 +1,7 @@
+#The Boston Housing data in the mlbench R package with 506 data points 
+#is being analysed uing Linear regression, Ridge, Elastic and LASSO
+
+
 #Loading the packages
 library(glmnet)
 library(mlbench)
@@ -23,15 +27,10 @@ trainIndex <- sample(1:nrow(bdata), 0.8*nrow(bdata))
 train <- bdata[trainIndex,]
 test <- bdata[-trainIndex,]
 
-bdata2 <- bdata
-x_var <- model.matrix(medv~., bdata2)[,-14]
-y_var <- bdata2$medv
+
 lambda_seq <- 10^seq(2, -2, by=-.1)
 
 set.seed(263)
-train2 <- sample(1:nrow(x_var), 0.8*nrow(x_var))
-X_test2 <- (-train2)
-y_test2 <- y_var[-train2]
 
 train3 = bdata2 %>%
   sample_frac(0.8)
@@ -52,7 +51,6 @@ y_test3 = test3 %>%
   unlist() %>%
   as.numeric()
 
-
 #Building the Models
 lin1 <- lm(medv~., data = train) #Modeling using Linear model= 73.26%
 linpred <- predict(lin1, test) #Predicting using Linear model
@@ -68,6 +66,7 @@ best_lam1 <- cv_output1$lambda.min #0.0126
 ridge_best <- glmnet(x_train3, y_train3, alpha = 0, lambda = best_lam1)
 ridge_pred <- predict(ridge_best, s=best_lam1, newx = x_test3)
 coef(ridge_best)
+AIC(ridge_best)
 
 #Predicting using Elastic net
 cv_output2 <- cv.glmnet(x_train3, y_train3, 
